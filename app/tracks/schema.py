@@ -36,6 +36,7 @@ class Query(graphene.ObjectType):
             return Track.objects.filter(filter)
 
     def resolve_all_tracks(self, info):
+        
         return Track.objects.all()
 
     def resolve_likes(self, info):
