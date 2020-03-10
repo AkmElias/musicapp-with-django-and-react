@@ -1,21 +1,96 @@
-import React from "react";
+import React, { useState } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-// import Dialog from "@material-ui/core/Dialog";
-// import DialogActions from "@material-ui/core/DialogActions";
-// import DialogContent from "@material-ui/core/DialogContent";
-// import DialogContentText from "@material-ui/core/DialogContentText";
-// import DialogTitle from "@material-ui/core/DialogTitle";
-// import FormControl from "@material-ui/core/FormControl";
-// import FormHelperText from "@material-ui/core/FormHelperText";
-// import TextField from "@material-ui/core/TextField";
-// import Button from "@material-ui/core/Button";
-// import CircularProgress from "@material-ui/core/CircularProgress";
-// import AddIcon from "@material-ui/icons/Add";
-// import ClearIcon from "@material-ui/icons/Clear";
-// import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import AddIcon from "@material-ui/icons/Add";
+import ClearIcon from "@material-ui/icons/Clear";
+import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
+import { Input } from "@material-ui/core";
 
 const CreateTrack = ({ classes }) => {
-  return <div>CreateTrack</div>;
+
+  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [file, setFile] = useState("")
+  
+  const handaleAudioChange = event =>{
+    const selectedFile = event.target.files[0]
+    setFile(selectedFile)
+  }
+
+  return (
+    <>
+      {/* create track button */}
+      <Button onClick={() => setOpen(true)} variant="fab" className={classes.fab} color="secondary">
+        {open ? <ClearIcon /> : <AddIcon />}
+      </Button>
+      {/* create track dialog */}
+      <Dialog open={open} className={classes.dialog}>
+        <form>
+          <DialogTitle> Create Track </DialogTitle>
+          <DialogContent>
+            <DialogContentText>Add a title , description & a Audio File </DialogContentText>
+            <form>
+              <FormControl fullWidth>
+                <TextField
+                  label="Title"
+                  placeholder="Add Title"
+                  className={classes.textField}
+                  onChange = {event => setTitle(event.target.value)}
+                />
+              </FormControl>
+              <FormControl fullWidth>
+                <TextField
+                  multiline
+                  row="4"
+                  label="Description"
+                  placeholder="Add description"
+                  className={classes.textField}
+                  onChange = {event => setDescription(event.target.value)}
+                />
+              </FormControl>
+              <FormControl fullWidth>
+                <Input
+                  required
+                  id="audio"
+                  type="file"
+                  inputProps={{ accept: 'audio/*' }}
+                  className={classes.input}
+                  onChange = {handaleAudioChange}
+                />
+                <label htmlFor="audio">
+                  <Button variant="outlined" color= {file ? "secondary" : "inherit" } component="span" className={classes.button}>
+                    Audio file
+                    <LibraryMusicIcon className={classes.icon} />
+                  </Button>
+                  {file && file.name}
+                </label>
+              </FormControl>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} className={classes.cancel}>
+              cancel
+              </Button>
+            <Button type="submit" className={classes.save}
+             disabled = {!title.trim() || !description.trim() || !file}
+            >
+              Add Track
+              </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    </>
+  )
 };
 
 const styles = theme => ({

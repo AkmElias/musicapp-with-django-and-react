@@ -30,11 +30,11 @@ const TrackList = ({ classes, tracks }) => (
                 color: "primary"
               }}
               primary={track.title}
-              // secondary={
-              //   <Link to={`/profile/${track.postedBy.id}`} className={classes.link}>
-              //     {track.postedBy.username}
-              //   </Link>
-              // }
+              secondary={
+                <Link to={`/profile/${track.postedBy.id}`} className={classes.link}>
+                  {track.postedBy.username}
+                </Link>
+              }
             />
             <AudioPlayer />
           </ListItem>
