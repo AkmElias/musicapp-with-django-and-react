@@ -16,9 +16,11 @@ const Login = ({ classes, setNewUser }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = (tokenAuth, event) => {
+  const handleSubmit = async (tokenAuth, event, client) => {
     event.preventDefault()
-    tokenAuth()
+    const res = await tokenAuth()
+    localStorage.setItem('AuthToken', res.data.tokenAuth.token)
+    client.writeData({ data: { isLoggedIn: true } })
   }
 
 
@@ -34,14 +36,12 @@ const Login = ({ classes, setNewUser }) => {
 
         <Mutation mutation={LOGIN_MUTATION}
           variables={{ username, password }}
-          onCompleted={data => {
-            console.log({ data })
-          }}
+
         >
-          {(tokenAuth, { loading, error }) => {
+          {(tokenAuth, { loading, error, called, client }) => {
             return (
-              <form onSubmit={event => handleSubmit(tokenAuth, event)} 
-              className={classes.form}>
+              <form onSubmit={event => handleSubmit(tokenAuth, event, client)}
+                className={classes.form}>
                 <FormControl margin="normal" required fullWidth>
                   <InputLabel htmlFor="username">
                     UserName

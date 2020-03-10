@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 import graphene
+from graphql import GraphQLError
 from graphene_django import DjangoObjectType
 
 
@@ -19,7 +20,7 @@ class Query(graphene.ObjectType):
         user = info.context.user
 
         if user.is_anonymous:
-            raise GraphQLError("logg in to add track")
+            raise GraphQLError("logg in first")
         return user
 
 
