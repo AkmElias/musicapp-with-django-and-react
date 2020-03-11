@@ -18,6 +18,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
 import { Input } from "@material-ui/core";
 
+import { GET_TRACKS_QUERY } from '../../pages/App'
 import Loading from '../Shared/Loading'
 import Error from '../Shared/Error'
 
@@ -28,10 +29,18 @@ const CreateTrack = ({ classes }) => {
   const [description, setDescription] = useState("")
   const [file, setFile] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const [fileError, setFileError] = useState("")
 
   const handaleAudioChange = event => {
     const selectedFile = event.target.files[0]
-    setFile(selectedFile)
+    const fileSizeLimit = 100000
+    if(selectedFile && selectedFile.size > fileSizeLimit) {
+      setFileError(`${selectedFile.name}: File size too large`)
+    } else {
+      setFile(selectedFile)
+      setFileError('')
+    }
+    
   }
 
   const handleAudioUpload = async () => {
@@ -68,7 +77,12 @@ const CreateTrack = ({ classes }) => {
           console.log({ data })
           setSubmitting(false)
           setOpen(false)
+          setTitle("")
+          setDescription("")
+          setFile("")
         }}
+
+        refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
       >
         {(createTrack, { loading, error }) => {
 
@@ -78,13 +92,14 @@ const CreateTrack = ({ classes }) => {
               <form onSubmit={event => handleSubmit(event, createTrack)}>
                 <DialogTitle> Create Track </DialogTitle>
                 <DialogContent>
-                  <DialogContentText>Add a title , description & a Audio File </DialogContentText>
+                  <DialogContentText>Add a title , description & a Audio File & under 1mb </DialogContentText>
                   <form>
                     <FormControl fullWidth>
                       <TextField
                         label="Title"
                         placeholder="Add Title"
                         className={classes.textField}
+                        value = {title}
                         onChange={event => setTitle(event.target.value)}
                       />
                     </FormControl>
@@ -96,9 +111,10 @@ const CreateTrack = ({ classes }) => {
                         placeholder="Add description"
                         className={classes.textField}
                         onChange={event => setDescription(event.target.value)}
+                        value = {description}
                       />
                     </FormControl>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth error={fileError}>
                       <Input
                         required
                         id="audio"
@@ -113,6 +129,7 @@ const CreateTrack = ({ classes }) => {
                         <LibraryMusicIcon className={classes.icon} />
                         </Button>
                         {file && file.name}
+                        <FormHelperText>{fileError}</FormHelperText>
                       </label>
                     </FormControl>
                   </form>
