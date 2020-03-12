@@ -21,15 +21,16 @@ const Profile = ({ classes, match }) => {
   //console.log(id)
   return (
     <Query query={PROFILE_QUERY} variables={{ id }}>
+
       {({ data, loading, error }) => {
         if (loading) return <Loading />
-        if (error) return <Error />
+        if (error) return <Error error={error}/>
         console.log({ data })
         return (
 
           <div>
             {/* user info */}
-            <Card>
+            <Card className={classes.card}>
               <CardHeader
                 avatar={<Avatar>{data.user.username[0]}</Avatar>}
                 title={data.user.username}
@@ -37,7 +38,7 @@ const Profile = ({ classes, match }) => {
               />
             </Card>
             {/*user created tracks*/}
-            <Paper>
+            <Paper elevation={1} className={classes.paper}>
               <Typography variant='title' className={classes.title}>
                 <AudiotrackIcon className={classes.audioIcon} />
                   Created Tracks
@@ -45,7 +46,7 @@ const Profile = ({ classes, match }) => {
               {data.user.trackSet.map(track => (
                 <div key={track.id}>
                   <Typography>
-                    {track.title} . {track.likes.length} likes.
+                    {track.title} . {track.likes.length} Likes.
                   </Typography>
                   <AudioPlayer url={track.url} />
 
@@ -105,6 +106,8 @@ query($id: Int!){
     trackSet{
       id
       title
+      description
+      url
       likes{
         id
       }
