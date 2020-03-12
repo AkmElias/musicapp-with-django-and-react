@@ -29,7 +29,7 @@ const CreateTrack = ({ classes }) => {
   const [description, setDescription] = useState("")
   const [file, setFile] = useState("")
   const [submitting, setSubmitting] = useState(false)
-  const [fileError, setFileError] = useState("")
+  const [fileError, setFileError] = useState(false)
 
   const handaleAudioChange = event => {
     const selectedFile = event.target.files[0]
@@ -61,6 +61,7 @@ const CreateTrack = ({ classes }) => {
 
   const handleSubmit = async (event, createTrack) => {
     event.preventDefault()
+   
     setSubmitting(true)
     const audioUploadedUrl = await handleAudioUpload()
     createTrack({ variables: { title, description, url: audioUploadedUrl } })
@@ -114,7 +115,7 @@ const CreateTrack = ({ classes }) => {
                         value = {description}
                       />
                     </FormControl>
-                    <FormControl fullWidth error={fileError}>
+                    <FormControl fullWidth>
                       <Input
                         required
                         id="audio"

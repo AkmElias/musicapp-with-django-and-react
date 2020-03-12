@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Mutation } from "react-apollo"
 import { gql } from "apollo-boost"
@@ -17,17 +17,19 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
 import { Input } from "@material-ui/core";
-
+import { UserContext } from '../../Root'
 import Error from '../Shared/Error'
 
 const UpdateTrack = ({ classes, track }) => {
 
+  const currentUser = useContext(UserContext)
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState(track.title)
   const [description, setDescription] = useState(track.description)
   const [file, setFile] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [fileError, setFileError] = useState(false)
+  const isCurrentUser = currentUser.id === track.postedBy.id
 
   const handaleAudioChange = event => {
     const selectedFile = event.target.files[0]
@@ -64,7 +66,8 @@ const UpdateTrack = ({ classes, track }) => {
     updateTrack({ variables: { trackId: track.id, title, description, url: audioUploadedUrl } })
   }
 
-  return (
+  return (isCurrentUser && (
+
     <>
       {/* create track button */}
       <IconButton>
@@ -110,11 +113,11 @@ const UpdateTrack = ({ classes, track }) => {
                         className={classes.textField}
                         value={description}
                         onChange={event => setDescription(event.target.value)}
-                       
-                        
+
+
                       />
                     </FormControl>
-                    <FormControl fullWidth error={fileError}>
+                    <FormControl fullWidth>
                       <Input
                         required
                         id="audio"
@@ -126,7 +129,7 @@ const UpdateTrack = ({ classes, track }) => {
                       <label htmlFor="audio">
                         <Button variant="outlined" color={file ? "secondary" : "inherit"} component="span" className={classes.button}>
                           Audio file
-                        <LibraryMusicIcon className={classes.icon} />
+                      <LibraryMusicIcon className={classes.icon} />
                         </Button>
                         {file && file.name}
                         <FormHelperText>{fileError}</FormHelperText>
@@ -137,7 +140,7 @@ const UpdateTrack = ({ classes, track }) => {
                 <DialogActions>
                   <Button disabled={submitting} onClick={() => setOpen(false)} className={classes.cancel}>
                     cancel
-                  </Button>
+                </Button>
                   <Button type="submit" className={classes.save}
                     disabled={submitting || !title.trim() || !description.trim() || !file}
                   >
@@ -156,6 +159,8 @@ const UpdateTrack = ({ classes, track }) => {
       {/* create track dialog */}
 
     </>
+  )
+
   )
 };
 

@@ -20,7 +20,7 @@ const App = ({ classes }) => {
           if (loading) return <Loading />
           if (error) return <Error />
           const tracks = searchResults.length > 0 ? searchResults : data.allTracks
-          console.log(data)
+          //console.log(tracks)
           //console.log({data})
           return <TrackList tracks={tracks} />
         }}

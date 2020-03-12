@@ -26,6 +26,7 @@ const SearchTracks = ({ classes, setSearchResults }) => {
       variables: { search }
     })
     setSearchResults(res.data.tracks)
+    console.log({setSearchResults})
   }
 
   return (
