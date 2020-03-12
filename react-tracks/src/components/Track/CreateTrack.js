@@ -34,13 +34,13 @@ const CreateTrack = ({ classes }) => {
   const handaleAudioChange = event => {
     const selectedFile = event.target.files[0]
     const fileSizeLimit = 1000000
-    if(selectedFile && selectedFile.size > fileSizeLimit) {
+    if (selectedFile && selectedFile.size > fileSizeLimit) {
       setFileError(`${selectedFile.name}: File size too large`)
     } else {
       setFile(selectedFile)
       setFileError('')
     }
-    
+
   }
 
   const handleAudioUpload = async () => {
@@ -61,10 +61,16 @@ const CreateTrack = ({ classes }) => {
 
   const handleSubmit = async (event, createTrack) => {
     event.preventDefault()
-   
+
     setSubmitting(true)
     const audioUploadedUrl = await handleAudioUpload()
     createTrack({ variables: { title, description, url: audioUploadedUrl } })
+  }
+
+  const handleUpdateCache = (cache, {data: {createTrack}}) => {
+    const data = cache.readQuery({query: GET_TRACKS_QUERY})
+    const tracks = data.tracks.concat(createTrack.track)
+    cache.writeQuery({query: GET_TRACKS_QUERY, data: {tracks}})
   }
 
   return (
@@ -82,8 +88,8 @@ const CreateTrack = ({ classes }) => {
           setDescription("")
           setFile("")
         }}
-        //update = {}
-         refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
+        update = {handleUpdateCache}
+        refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
       >
         {(createTrack, { loading, error }) => {
 
@@ -100,7 +106,7 @@ const CreateTrack = ({ classes }) => {
                         label="Title"
                         placeholder="Add Title"
                         className={classes.textField}
-                        value = {title}
+                        value={title}
                         onChange={event => setTitle(event.target.value)}
                       />
                     </FormControl>
@@ -112,7 +118,7 @@ const CreateTrack = ({ classes }) => {
                         placeholder="Add description"
                         className={classes.textField}
                         onChange={event => setDescription(event.target.value)}
-                        value = {description}
+                        value={description}
                       />
                     </FormControl>
                     <FormControl fullWidth>
@@ -169,6 +175,13 @@ const CREATE_TRACK_MUTATION = gql`
          title
          description
          url
+         likes {
+          id
+        }
+        postedBy {
+          id
+          username
+        }
        }
      }
    }

@@ -13,7 +13,7 @@ export const UserContext = React.createContext()
 
 const Root = () => (
 
-    <Query query={ME_QUERY}>
+    <Query query={ME_QUERY} fetchPolicy='cache-and-network'>
 
         {({ data, error, loading }) => {
             if (loading) return <Loading/>
