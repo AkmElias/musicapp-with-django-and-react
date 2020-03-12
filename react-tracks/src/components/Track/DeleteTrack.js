@@ -18,6 +18,7 @@ const DeleteTrack = ({ track }) => {
         console.log({ data })
       }}
       refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
+      //update = {}
     >
       {deleteTrack => (
         <IconButton onClick={deleteTrack}>

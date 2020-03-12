@@ -122,7 +122,7 @@ class CreateLike(graphene.Mutation):
             raise GraphQLError("Log in to like")
         if not track:
             raise GraphQLError("can't find track with this id")
-        Like.objects.creates(
+        Like.objects.create(
             user=user,
             track=track
         )

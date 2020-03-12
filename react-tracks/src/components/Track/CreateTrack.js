@@ -82,8 +82,8 @@ const CreateTrack = ({ classes }) => {
           setDescription("")
           setFile("")
         }}
-
-        refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
+        //update = {}
+         refetchQueries={() => [{ query: GET_TRACKS_QUERY }]}
       >
         {(createTrack, { loading, error }) => {
 
